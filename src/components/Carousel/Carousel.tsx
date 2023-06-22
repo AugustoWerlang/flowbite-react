@@ -50,9 +50,11 @@ export interface CarouselProps extends PropsWithChildren<ComponentProps<'div'>> 
   slide?: boolean;
   slideInterval?: number;
   theme?: DeepPartial<FlowbiteCarouselTheme>;
+  callback?: (activeItem: number) => void;
 }
 
 export const Carousel: FC<CarouselProps> = ({
+  callback,
   children,
   indicators = true,
   leftControl,
@@ -105,6 +107,12 @@ export const Carousel: FC<CarouselProps> = ({
       return () => clearInterval(intervalId);
     }
   }, [activeItem, isDragging, navigateTo, slide, slideInterval]);
+
+  useEffect(() => {
+    if (callback) {
+      callback(activeItem);
+    }
+  }, [activeItem, callback]);
 
   const handleDragging = (dragging: boolean) => () => setIsDragging(dragging);
 
